@@ -31,7 +31,15 @@
     {
         NavManager.NavigateTo("/register");
     }
-    
+
+    protected override void OnInitialized()
+    {
+        if (_userData.user != null)
+        {
+            NavManager.NavigateTo("/");
+        }
+    }
+
     private async Task LoginCall()
     {
         var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";

@@ -38,6 +38,14 @@
     private string password1;
     private string password2;
 
+    protected override void OnInitialized()
+    {
+        if (_userData.user != null)
+        {
+            NavManager.NavigateTo("/");
+        }
+    }
+
     private void toLogin()
     {
         NavManager.NavigateTo("/login");
