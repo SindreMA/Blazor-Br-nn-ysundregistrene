@@ -1,0 +1,41 @@
+@using BrregFrontend.DTOs
+@using BrregFrontend.Components
+
+<div class="w-100 d-flex flex-column">
+    <div class="d-flex w-100">
+        <div class="d-flex flex-column gap-1 flex-grow-1 w-100">
+            <ValueDisplay Width="300" Label="Registered in the VAT-register" Value="@value.RegistrertIMvaregisteret" />
+            <ValueDisplay Width="300" Label="Registered in the Company register" Value="@value.RegistrertIForetaksregisteret" />
+            <ValueDisplay Width="300" Label="Registered in the Foundation register" Value="@value.RegistrertIStiftelsesregisteret" />
+            <ValueDisplay Width="300" Label="Registered in the Volunteer register" Value="@value.RegistrertIFrivillighetsregisteret" />
+            <ValueDisplay Width="300" Label="Under liquidation" Value="@value.UnderAvvikling" />
+            <ValueDisplay Width="300" Label="Under forced liquidation or forced dissolution" Value="@value.UnderTvangsavviklingEllerTvangsopplosning" />
+            <ValueDisplay Width="300" Label="Last submitted annual report" Value="@value.SisteInnsendteAarsregnskap" />        
+        </div>
+        <div class="d-flex flex-column gap-1 flex-grow-1 w-100">
+            <ValueDisplay Width="180" Label="Institutional sector code" Value="@value.InstitusjonellSektorkode" />
+            <ValueDisplay Width="180" Label="Bankruptcy" Value="@value.Konkurs" />
+            <ValueDisplay Width="180" Label="Language" Value="@value.Maalform" />
+            <ValueDisplay Width="180" Label="Website" Value="@value.Hjemmeside" />
+        </div>
+    </div>
+    <br />
+
+    @if (value.Forretningsadresse != null) {
+        <ValueDisplay Width="180" Label="Company Address" Value="@GetAddressString(value.Forretningsadresse)" />
+    }
+    @if (value.Postadresse != null) {
+        <ValueDisplay Width="180" Label="Mail Address" Value="@GetAddressString(value.Postadresse)" />
+    }
+
+</div>
+
+@code {
+    [Parameter]
+    public CompanyFullObject value { get; set; }
+
+
+    private string GetAddressString( AdresseObject address) => 
+        $"{address?.Kommune ?? "unknown"}, {address?.Postnummer ?? "unknown"} {address?.Poststed ?? "unknown"} {address?.Land ?? "unknown"}";
+
+}

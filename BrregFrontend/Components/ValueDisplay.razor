@@ -1,0 +1,31 @@
+﻿<div class="d-flex gap-3 valueDisplayMain align-content-center w-100">
+    <div style="@GetWidth()" class="fw-bold">@Label:</div>
+    @switch (Value?.GetType()?.Name)
+    {
+        case "DateTime":
+            <div>@DateTime.Parse(@Value.ToString()).ToShortDateString()</div>
+            break;
+        case "Boolean":
+            <div>
+                @((bool)Value ? "Yes" : "No")
+            </div>
+            break;
+        case null:
+            <div>NULL</div>
+            break;
+        default:
+            <div>@Value.ToString()</div>
+            break;
+    }
+</div>
+
+@code {
+    [Parameter]
+    public int Width { get; set; }
+    [Parameter]
+    public object Value { get; set; }
+    [Parameter]
+    public string Label { get; set; }
+
+    private string GetWidth() => $"width: {Width}px";
+}

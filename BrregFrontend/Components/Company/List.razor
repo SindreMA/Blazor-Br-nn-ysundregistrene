@@ -1,0 +1,75 @@
+@using System.Net.Http.Json;
+@using BrregFrontend.DTOs;
+@inject HttpClient httpClient;
+@inject NavigationManager NavManager
+
+<div>
+    @if (data != null)
+    {
+        <div class="d-flex flex-column gap-2">
+            <div class="w-100 d-flex justify-content-end">
+                <MudPagination Variant="Variant.Filled" Rectangular Color="Color.Primary" Count="@GetPages()" SelectedChanged="ChangePage" />
+             </div>
+             <MudTable Items="@data?.Items" Hover="true" Loading="@loading" LoadingProgressColor="Color.Info">
+                 <HeaderContent>
+                     <MudTh>Org Nr</MudTh>
+                     <MudTh>Name</MudTh>
+                     <MudTh>Employees</MudTh>
+                     <MudTh>Founded</MudTh>
+                     <MudTh Style="width: 30px"></MudTh>
+                 </HeaderContent>
+                 <RowTemplate>
+                     <MudTd DataLabel="Nr">@context.OrgNr</MudTd>
+                        <MudTd DataLabel="Name">@context.Navn</MudTd>
+                        <MudTd DataLabel="Employees">@context.AntallAnsatte</MudTd>
+                        <MudTd DataLabel="Founded">@context.Stiftelsesdato.ToShortDateString()</MudTd>
+                         <MudTd DataLabel="Actions">
+                             <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" aria-label="expandmore" @onclick="()=> GoToCompany(context.OrgNr)" />
+                         </MudTd>
+                    </RowTemplate>
+                </MudTable>
+                <div class="w-100 d-flex justify-content-end">
+                    <MudPagination Variant="Variant.Filled" Rectangular Color="Color.Primary" Count="@GetPages()" SelectedChanged="ChangePage" />
+                </div>
+            </div>
+    }
+</div>
+@code {
+    private bool loading;
+    private ListResponse<CompanyBaseObject> data = null;
+    private int start = 0;
+    private int amount = 30;
+
+    private async Task ChangePage(int page)
+    {
+        start = (page - 1) * amount;
+        await FetchData();
+    }
+    
+
+    private int GetPages()
+    {
+        if (data == null) return 0;
+        return (int)Math.Ceiling((double)data.TotalItems / amount);        
+    }
+
+    private async Task FetchData()
+    {
+        
+        loading = true;
+        Console.WriteLine("Fetching data");
+        data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"http://localhost:5050/Company?start={start}&amount={amount}");
+        Console.WriteLine(data);
+        loading = false;
+    }
+
+    private void GoToCompany(long orgNr)
+    {
+        NavManager.NavigateTo($"/company/{orgNr}");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await FetchData();
+    }
+}

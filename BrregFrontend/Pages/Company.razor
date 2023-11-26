@@ -1,0 +1,60 @@
+﻿@using BrregFrontend.DTOs
+@page "/company/{OrgNr:long}"
+@inject HttpClient Http
+@using BrregFrontend.Components.Company
+
+@if (_company != null)
+{
+    <div class="p-5">
+        <h3>@_company.Navn</h3>
+        <p>Orginazation number: @_company.OrgNr</p>
+        <br />
+        <CompanyDetails value="@_company" />
+        <br />
+        <PersonList list="@_company.Personer" />
+    </div>
+}
+else if (failed)
+{
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <MudAlert Severity="Severity.Error">Organisation number does not exist</MudAlert>
+    </div>
+}
+else
+{
+    <div class="d-flex justify-content-center align-items-center h-100">
+        <MudProgressCircular 
+            Color="Color.Primary" 
+            Indeterminate="true" 
+            Style="height:120px;width:120px;" 
+            Size="Size.Large" 
+        />
+    </div>
+}
+
+@code{
+    [Parameter]
+    public long OrgNr { get; set; }
+    
+    private bool failed = false;
+
+    private CompanyFullObject _company = null;
+
+    private async Task FetchCompany()
+    {
+        _company = await Http.GetFromJsonAsync<CompanyFullObject>($"http://localhost:5050/Company/{OrgNr}");
+    }
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await FetchCompany();
+        }
+        catch (Exception)
+        {
+            failed = true;
+        }
+    }
+}

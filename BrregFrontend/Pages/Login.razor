@@ -1,0 +1,47 @@
+@page "/login"
+@using BrregFrontend.Components.Login;
+@using System.Text.Json.Serialization
+@using BrregFrontend.DTOs
+@inject NavigationManager NavManager;
+@inject HttpClient Http;
+@inject ISnackbar Snackbar
+
+<LoginLayout>
+    <h3>Login</h3>
+    <div class="d-flex flex-column align-items-center justify-content-center align-content-center w-100 h-100" style="gap: 15px;">
+        <MudTextField style="height: 56px;" FullWidth @bind-Value="username" Label="Username" Variant="Variant.Filled"></MudTextField>
+        <MudTextField style="height: 56px;" FullWidth @bind-Value="password" Label="Password" InputType="InputType.Password" Variant="Variant.Filled"></MudTextField>
+        <br />
+        <div class="d-flex justify-content-end align-items-center text-center gap-4 w-100">
+            <a @onclick="toReg" @onclick:preventDefault="true" Href="/register">Register</a>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="LoginAction">Login</MudButton>
+        </div>
+    </div>
+</LoginLayout>
+
+ @code {
+    [CascadingParameter(Name = "UserData")]
+    public LoginData _userData { get; set; }
+
+
+    private string username { get; set; } = "";
+    private string password { get; set; } = "";
+
+    private void toReg()
+    {
+        NavManager.NavigateTo("/register");
+    }
+
+    private async Task LoginAction()
+    {
+        var content = new { username, password };
+        var user = await Http.PostAsJsonAsync($"http://localhost:5050/Auth", content);
+
+        _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
+        _userData.ValuesChanged.Invoke();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("Logged in", Severity.Success);
+
+        NavManager.NavigateTo("/");
+    }
+}

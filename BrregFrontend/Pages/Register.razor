@@ -1,0 +1,64 @@
+@page "/register"
+@using BrregFrontend.Components.Login;
+@using BrregFrontend.DTOs
+@using static MudBlazor.CategoryTypes
+@inject NavigationManager NavManager
+@inject HttpClient Http
+@inject ISnackbar Snackbar
+
+
+<LoginLayout>
+    <div>
+        <h3>Register user</h3>
+        <br>
+        <form class="d-flex flex-column gap-1">
+            <MudTextField style="height: 56px;" FullWidth @bind-Value="username" Label="Username" Variant="Variant.Filled"></MudTextField>
+            <MudTextField style="height: 56px;" FullWidth @bind-Value="password1" InputType="InputType.Password" Label="Password" Variant="Variant.Filled"></MudTextField>
+            <MudTextField style="height: 56px;" FullWidth @bind-Value="password2" InputType="InputType.Password" Label="Repeat password" Variant="Variant.Filled"></MudTextField>
+            <br>
+            <div class="d-flex justify-content-end align-items-center gap-3">
+                <div class="d-flex gap-1">
+                    <p>Already have an account?</p>
+                    <a @onclick="toLogin" Href="/login">Login</a>
+                </div>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="RegisterUser">Register
+                </MudButton>
+            </div>
+
+        </form>
+    </div>
+
+</LoginLayout>
+
+ @code {
+    [CascadingParameter(Name = "UserData")]
+    public LoginData _userData { get; set; }
+
+    private string username;
+    private string password1;
+    private string password2;
+
+    private void toLogin()
+    {
+        NavManager.NavigateTo("/login");
+    }
+
+    public async Task RegisterUser()
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        if (password1 != password2)
+        {
+            Snackbar.Add("Passwords doesn't match", Severity.Error);
+            return;
+        }
+        var content = new { username, password = password1 };
+        var user = await Http.PostAsJsonAsync($"http://localhost:5050/auth/create", content);
+        _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
+        _userData.ValuesChanged.Invoke();
+
+       Snackbar.Add("User created", Severity.Success);
+
+        NavManager.NavigateTo("/");
+    }
+
+}

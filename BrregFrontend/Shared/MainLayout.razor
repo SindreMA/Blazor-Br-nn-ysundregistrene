@@ -1,0 +1,86 @@
+﻿@using BrregFrontend.DTOs
+@inherits LayoutComponentBase
+@inject HttpClient Http
+@inject NavigationManager NavManager
+@inject ISnackbar Snackbar
+
+<MudThemeProvider IsDarkMode />
+<MudDialogProvider />
+<MudSnackbarProvider />
+ <CascadingValue Name="UserData" Value="@_userData">
+    <div class="page">
+        @if (_userData.user != null)
+        {
+            <header class="shadow-lg gap-lg-5">
+                <MudLink Href="#">Home</MudLink>
+                <div class="seperatorLine" />
+                <MudLink Href="/companies">Companies</MudLink>
+                <div class="flex-grow-1" />
+                <div class="d-flex align-items-center gap-4">
+                    <p>Logged in as @_userData.user.Username</p>
+                    <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="OnLogout" >Logout</MudButton>
+                </div>
+            </header>
+        }
+
+        <main class=" @(_userData.user != null ? "fullPageMain shadow-lg" : "")">
+            @if (!loading)
+            {
+                @Body
+            }
+            else
+            {
+                <div class="d-flex justify-content-center align-items-center h-100">
+                    <MudProgressCircular Color="Color.Primary" Indeterminate="true" Style="height:120px;width:120px;"
+                        Size="Size.Large" />
+                </div>
+            }
+        </main>
+    </div>
+</CascadingValue>
+
+@code {
+
+    private LoginData _userData = new LoginData()
+     {
+        user = null
+     };
+
+    private bool loading = true;
+
+    private async Task AutoLogin() {
+        _userData.user = await Http.GetFromJsonAsync<UserObject>("http://localhost:5050/Auth");
+    }
+
+    private async Task OnLogout()
+    {
+
+        await Http.PostAsync("http://localhost:5050/auth/logout", null);
+        _userData.user = null;
+        _userData.ValuesChanged.Invoke();
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        Snackbar.Add("User logged out", Severity.Info);
+
+        NavManager.NavigateTo("/login");
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _userData.ValuesChanged += () => StateHasChanged();
+
+        try
+        {
+            await AutoLogin();
+        }
+        catch (Exception e)
+        {
+            var uri = new Uri(NavManager.Uri).AbsolutePath.ToLower();
+            if (!uri.EndsWith("/login") && !uri.EndsWith("/register"))
+            {
+                NavManager.NavigateTo("/login");
+            }
+            
+        }
+        loading = false;
+    }
+}
