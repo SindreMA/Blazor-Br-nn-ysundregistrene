@@ -34,8 +34,9 @@
 
     private async Task LoginAction()
     {
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
         var content = new { username, password };
-        var user = await Http.PostAsJsonAsync($"http://localhost:5050/Auth", content);
+        var user = await Http.PostAsJsonAsync($"{apiUrl}/Auth", content);
 
         _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
         _userData.ValuesChanged.Invoke();

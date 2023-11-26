@@ -49,13 +49,14 @@
     private bool loading = true;
 
     private async Task AutoLogin() {
-        _userData.user = await Http.GetFromJsonAsync<UserObject>("http://localhost:5050/Auth");
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        _userData.user = await Http.GetFromJsonAsync<UserObject>($"{apiUrl}/Auth");
     }
 
     private async Task OnLogout()
     {
-
-        await Http.PostAsync("http://localhost:5050/auth/logout", null);
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        await Http.PostAsync($"{apiUrl}/auth/logout", null);
         _userData.user = null;
         _userData.ValuesChanged.Invoke();
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;

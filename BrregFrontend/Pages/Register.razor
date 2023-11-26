@@ -51,8 +51,10 @@
             Snackbar.Add("Passwords doesn't match", Severity.Error);
             return;
         }
+
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
         var content = new { username, password = password1 };
-        var user = await Http.PostAsJsonAsync($"http://localhost:5050/auth/create", content);
+        var user = await Http.PostAsJsonAsync($"{apiUrl}/auth/create", content);
         _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
         _userData.ValuesChanged.Invoke();
 

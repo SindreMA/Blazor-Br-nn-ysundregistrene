@@ -42,7 +42,8 @@ else
 
     private async Task FetchCompany()
     {
-        _company = await Http.GetFromJsonAsync<CompanyFullObject>($"http://localhost:5050/Company/{OrgNr}");
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        _company = await Http.GetFromJsonAsync<CompanyFullObject>($"{apiUrl}/Company/{OrgNr}");
     }
 
 

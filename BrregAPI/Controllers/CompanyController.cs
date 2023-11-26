@@ -10,7 +10,7 @@ namespace BrregAPI.Controllers
 {
     [Authorize]
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class CompanyController : BaseController
     {
         private readonly CompanyHelper _companyHelper;

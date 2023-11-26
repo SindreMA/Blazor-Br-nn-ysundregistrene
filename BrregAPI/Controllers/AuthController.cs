@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace BrregAPI.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class AuthController : BaseController
     {
         private readonly GeneralHelper _generalHelper;

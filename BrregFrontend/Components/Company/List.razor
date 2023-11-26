@@ -55,11 +55,10 @@
 
     private async Task FetchData()
     {
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
         
         loading = true;
-        Console.WriteLine("Fetching data");
-        data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"http://localhost:5050/Company?start={start}&amount={amount}");
-        Console.WriteLine(data);
+        data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"{apiUrl}/Company?start={start}&amount={amount}");
         loading = false;
     }
 
