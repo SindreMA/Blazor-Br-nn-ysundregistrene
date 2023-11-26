@@ -1,6 +1,7 @@
 @using System.Net.Http.Json;
 @using BrregFrontend.DTOs;
 @inject HttpClient httpClient;
+@inject ISnackbar Snackbar
 @inject NavigationManager NavManager
 
 <div>
@@ -45,7 +46,7 @@
         start = (page - 1) * amount;
         await FetchData();
     }
-    
+
 
     private int GetPages()
     {
@@ -56,9 +57,16 @@
     private async Task FetchData()
     {
         var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
-        
+
         loading = true;
-        data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"{apiUrl}/Company?start={start}&amount={amount}");
+        try
+        {
+            data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"{apiUrl}/Company?start={start}&amount={amount}");
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Something went wrong", Severity.Error);
+        }
         loading = false;
     }
 

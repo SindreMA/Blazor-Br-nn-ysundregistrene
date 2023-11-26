@@ -43,6 +43,15 @@
         NavManager.NavigateTo("/login");
     }
 
+    private async Task RegisterCall()
+    {
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        var content = new { username, password = password1 };
+        var user = await Http.PostAsJsonAsync($"{apiUrl}/auth/create", content);
+        _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
+        _userData.ValuesChanged.Invoke();
+    }
+
     public async Task RegisterUser()
     {
         Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
@@ -52,15 +61,17 @@
             return;
         }
 
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
-        var content = new { username, password = password1 };
-        var user = await Http.PostAsJsonAsync($"{apiUrl}/auth/create", content);
-        _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
-        _userData.ValuesChanged.Invoke();
-
-       Snackbar.Add("User created", Severity.Success);
-
-        NavManager.NavigateTo("/");
+        try
+        {
+            await RegisterCall();
+            Snackbar.Add("User created", Severity.Success);
+            NavManager.NavigateTo("/");
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to register user", Severity.Error);
+            return;
+        }
     }
 
 }

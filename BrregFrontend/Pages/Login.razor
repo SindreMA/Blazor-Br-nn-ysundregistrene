@@ -31,18 +31,29 @@
     {
         NavManager.NavigateTo("/register");
     }
-
-    private async Task LoginAction()
+    
+    private async Task LoginCall()
     {
         var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
         var content = new { username, password };
         var user = await Http.PostAsJsonAsync($"{apiUrl}/Auth", content);
 
         _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
-        _userData.ValuesChanged.Invoke();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("Logged in", Severity.Success);
+        _userData.ValuesChanged.Invoke();        
+    }
 
-        NavManager.NavigateTo("/");
+    private async Task LoginAction()
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        try
+        {
+            await LoginCall();
+            Snackbar.Add("Logged in", Severity.Success);
+            NavManager.NavigateTo("/");
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Wrong username or password", Severity.Error);
+        }        
     }
 }

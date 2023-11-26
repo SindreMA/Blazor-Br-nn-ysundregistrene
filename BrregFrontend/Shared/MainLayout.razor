@@ -53,15 +53,26 @@
         _userData.user = await Http.GetFromJsonAsync<UserObject>($"{apiUrl}/Auth");
     }
 
-    private async Task OnLogout()
+    private async Task LogoutCall()
     {
         var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
         await Http.PostAsync($"{apiUrl}/auth/logout", null);
         _userData.user = null;
         _userData.ValuesChanged.Invoke();
-        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
-        Snackbar.Add("User logged out", Severity.Info);
+    }
 
+    private async Task OnLogout()
+    {
+        Snackbar.Configuration.PositionClass = Defaults.Classes.Position.TopRight;
+        try
+        {
+            await LogoutCall();
+            Snackbar.Add("User logged out", Severity.Info);
+        }
+        catch (Exception)
+        {
+            Snackbar.Add("Failed to logout, maybe already logged out", Severity.Error);
+        }        
         NavManager.NavigateTo("/login");
     }
 
