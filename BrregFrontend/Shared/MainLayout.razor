@@ -49,13 +49,13 @@
     private bool loading = true;
 
     private async Task AutoLogin() {
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "https://brreg.sindrema.com/api";
         _userData.user = await Http.GetFromJsonAsync<UserObject>($"{apiUrl}/Auth");
     }
 
     private async Task LogoutCall()
     {
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "http://localhost:5050/api";
+        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "https://brreg.sindrema.com/api";
         await Http.PostAsync($"{apiUrl}/auth/logout", null);
         _userData.user = null;
         _userData.ValuesChanged.Invoke();
