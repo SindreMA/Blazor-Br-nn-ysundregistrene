@@ -1,6 +1,8 @@
 ﻿@using BrregFrontend.DTOs
+@inject HttpClient Http
+
 <h5>People</h5>
-<MudTable Items="@list" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<MudTable Items="@list" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info" CanCancelEdit RowEditCommit="ItemHasBeenCommitted">
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Email</MudTh>
@@ -9,13 +11,36 @@
     </HeaderContent>
     <RowTemplate>
             <MudTd DataLabel="Name">@context.Navn</MudTd>
-            <MudTd DataLabel="Email">@(context.Epost ?? "test@gmail.com")</MudTd>
-            <MudTd DataLabel="Phone">@(context.Telefon ?? "+4712345678")</MudTd>
+            <MudTd DataLabel="Email">@(context.Epost ?? "none")</MudTd>
+            <MudTd DataLabel="Phone">@(context.Telefon ?? "none")</MudTd>
             <MudTd DataLabel="Position">@(context.Rolle ?? "Unknown")</MudTd>
         </RowTemplate>
+        <RowEditingTemplate>
+            <MudTd DataLabel="Name">@context.Navn</MudTd>
+            <MudTd DataLabel="Email">
+                <MudTextField @bind-Value="@context.Epost"  />
+         </MudTd>
+         <MudTd DataLabel="Phone">
+             <MudTextField @bind-Value="@context.Telefon"  />
+         </MudTd>
+         <MudTd DataLabel="Position">
+                <MudTextField @bind-Value="@context.Rolle" />
+         </MudTd>
+     </RowEditingTemplate>
     </MudTable>
 
     @code {
     [Parameter]
     public List<PersonObject> list { get; set; } = new List<PersonObject>();
+
+    private async Task UpdatePerson(PersonObject person)
+    {
+        await Http.PutAsJsonAsync($"{Statics.apiUrl}/Person/{person.Id}", person);
+    }
+
+    private void ItemHasBeenCommitted(object changedObject)
+    {
+        var newPerson = (PersonObject)changedObject;
+        UpdatePerson(newPerson).AndForget();
+    }
 }
