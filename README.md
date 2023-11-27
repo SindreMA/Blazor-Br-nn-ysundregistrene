@@ -32,7 +32,11 @@ The following free tools can be used to carry out the task. Feel free to use oth
 
 
 ## NB!
-Note that the contact information ("contact information such as phone and email") were not provided in given API, so this have just hardcoded two people with contact information.
-But the backend have full support for just adding in the data with another fetcher service.
+Note that the contact information ("contact information such as phone and email") were not provided in given API, so this have just hardcoded in the frontend to show how it would look like.
+
+Nothing would stop us from making a lookup service that searched this data from other sources, but this was not the task at hand.
+
+The people data were is fetched from https://data.brreg.no/enhetsregisteret/api/enheter/{orgId}/roller. This is the closest i found to a contact list.
+
 
 
