@@ -30,6 +30,7 @@ namespace BrregAPI.Helpers
                 company = new Firma(data);
                 _context.Firmaer.Add(company);
                 _context.SaveChanges();
+                Hangfire.BackgroundJob.Enqueue<CompanyHelper>(x => x.GetCompany(company.Organisasjonsnummer));
             }
 
             return new CompanyFullObject(company);            
