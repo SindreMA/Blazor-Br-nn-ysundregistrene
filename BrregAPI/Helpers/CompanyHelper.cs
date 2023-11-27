@@ -1,4 +1,5 @@
-﻿using BrregAPI.Modals;
+﻿using BrregAPI.Handlers.Services;
+using BrregAPI.Modals;
 using BrregAPI.Modals.ApiResponse;
 using BrregAPI.Modals.Database;
 using BrregAPI.Modals.Response;
@@ -16,7 +17,7 @@ namespace BrregAPI.Helpers
             _context = context;
         }
 
-        internal CompanyFullObject GetCompany(int id)
+        internal CompanyFullObject GetCompany(long id)
         {
             var company = _context.Firmaer
             .Include(x => x.Forretningsadresse)
@@ -30,7 +31,7 @@ namespace BrregAPI.Helpers
                 company = new Firma(data);
                 _context.Firmaer.Add(company);
                 _context.SaveChanges();
-                Hangfire.BackgroundJob.Enqueue<CompanyHelper>(x => x.GetCompany(company.Organisasjonsnummer));
+                Hangfire.BackgroundJob.Enqueue<FetcherService>(x => x.FetchEmployeesForCompany(id));
             }
 
             return new CompanyFullObject(company);            
@@ -55,7 +56,7 @@ namespace BrregAPI.Helpers
             return new Firma(data);
         }
 
-        public FirmaRequest FetchCompany (int OrgNr)
+        public FirmaRequest FetchCompany (long OrgNr)
         {
             var data = GeneralHelper.HttpGet($"{Statics.ExtenralApi}/enheter/{OrgNr}");
             var company = Newtonsoft.Json.JsonConvert.DeserializeObject<FirmaRequest>(data);

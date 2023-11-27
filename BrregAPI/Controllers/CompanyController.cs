@@ -23,7 +23,7 @@ namespace BrregAPI.Controllers
         public async Task<ActionResult> GetList(int start, int amount) => Ok(await _companyHelper.GetCompanies(start, amount));
 
         [HttpGet("{id}")]
-        public ActionResult GetSpesific(int id) => Ok(_companyHelper.GetCompany(id));
+        public ActionResult GetSpesific(long id) => Ok(_companyHelper.GetCompany(id));
 
     }
 }
