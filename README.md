@@ -30,14 +30,9 @@ The following free tools can be used to carry out the task. Feel free to use oth
 - **SQL Server** - [Download Link](https://www.microsoft.com/en-in/sql-server/sql-server-downloads)
 - **PostgreSQL** - [Download Link](https://www.postgresql.org/)
 
-## Delivery
-We request that you make the code available to us on a public GIT repository no later than the day before the interview.
-
-
 
 ## NB!
-Note that the contact information ("contact information such as phone and email") were not provided in given API, so this have just hardcoded two contact people
-
-This could still fetched from a other api
+Note that the contact information ("contact information such as phone and email") were not provided in given API, so this have just hardcoded two people with contact information.
+But the backend have full support for just adding in the data with another fetcher service.
 
 
