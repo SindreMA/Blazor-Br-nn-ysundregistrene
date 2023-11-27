@@ -8,5 +8,6 @@
         public string Poststed { get; set; }
         public string Kommune { get; set; }
         public string Kommunenummer { get; set; }
+        public string Gateadresse { get; set; }
     }
 }

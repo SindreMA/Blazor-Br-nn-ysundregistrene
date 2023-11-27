@@ -1,41 +1,21 @@
 ﻿@using BrregFrontend.DTOs
-<h5>Employees</h5>
-<MudTable Items="@testList" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
+<h5>People</h5>
+<MudTable Items="@list" Hover="true" Breakpoint="Breakpoint.Sm" LoadingProgressColor="Color.Info">
     <HeaderContent>
         <MudTh>Name</MudTh>
         <MudTh>Email</MudTh>
         <MudTh>Phone</MudTh>
+        <MudTh>Position</MudTh>
     </HeaderContent>
     <RowTemplate>
             <MudTd DataLabel="Name">@context.Navn</MudTd>
-            <MudTd DataLabel="Email">@context.Epost</MudTd>
-            <MudTd DataLabel="Phone">@context.Telefon</MudTd>
+            <MudTd DataLabel="Email">@(context.Epost ?? "test@gmail.com")</MudTd>
+            <MudTd DataLabel="Phone">@(context.Telefon ?? "+4712345678")</MudTd>
+            <MudTd DataLabel="Position">@(context.Rolle ?? "Unknown")</MudTd>
         </RowTemplate>
     </MudTable>
 
     @code {
     [Parameter]
     public List<PersonObject> list { get; set; } = new List<PersonObject>();
-
-    public List<PersonObject> testList = new List<PersonObject>()
-            {
-                new PersonObject()
-                {
-                    Navn = "Ola Nordmann",
-                    Epost = "test.test@test.test",
-                    Telefon = "12345678"
-                },
-                new PersonObject()
-                {
-                    Navn = "Kari Nordmann",
-                    Epost = "test.test@test.test",
-                    Telefon = "12345678"
-                },
-            };
-
-
-    protected override void OnInitialized()
-    {
-    }
-
 }

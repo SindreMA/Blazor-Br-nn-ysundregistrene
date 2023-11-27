@@ -8,6 +8,7 @@ namespace BrregAPI.Modals.Response
         public string Navn { get; set; }
         public string Epost { get; set; }
         public string Telefon { get; set; }
+        public string Rolle { get; set; }        
         
         public PersonObject(Person person)
         {
@@ -15,6 +16,7 @@ namespace BrregAPI.Modals.Response
             Navn = person.Navn;
             Epost = person.Epost;
             Telefon = person.Telefon;
+            Rolle = person.RolleNavn;
         }
     }    
 }

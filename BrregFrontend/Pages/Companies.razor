@@ -5,11 +5,13 @@
 
 <div class="d-flex flex-column w-100 justify-content-between p-4">
     <div class="w-100">
-        <p class="m-0 " >Go to spesific company</p>
-        <div class="d-flex align-items-end gap-3 w-100">
-            <MudTextField InputType="InputType.Number" FullWidth @bind-Value="OrgNr" Label="Enter company organisation number" Variant="Variant.Filled" />
-            <MudButton @onclick="GoToCompany" Variant="Variant.Filled" Color="Color.Primary" style="width: 150px; height: 56px;">Enter</MudButton>
-        </div>
+        <p class="m-0 ">Go to specific company</p>
+        <form action="#" @onsubmit="GoToCompany" @onsubmit:preventDefault >
+            <div class="d-flex align-items-end gap-3 w-100">
+                <MudTextField InputType="InputType.Number" FullWidth @bind-Value="OrgNr" Label="Enter company organisation number" Variant="Variant.Filled" />
+                <MudButton @onclick="GoToCompany" Variant="Variant.Filled" Color="Color.Primary" style="width: 150px; height: 56px;">Enter</MudButton>
+            </div>
+         </form>
 
     </div>
     <br>
@@ -28,3 +30,5 @@
         NavManager.NavigateTo($"/company/{OrgNr}");
     }
 }
+
+

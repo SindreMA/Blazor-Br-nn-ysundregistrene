@@ -10,6 +10,7 @@ namespace BrregAPI.Modals.Response
         public string Poststed { get; set; }
         public string Kommune { get; set; }
         public string Kommunenummer { get; set; }
+        public string GateAdresse { get; set; }
 
         public AdresseObject(Adresse adresse)
         {
@@ -19,6 +20,7 @@ namespace BrregAPI.Modals.Response
             Poststed = adresse.Poststed;
             Kommune = adresse.Kommune;
             Kommunenummer = adresse.Kommunenummer;
+            GateAdresse = adresse.GateAdresse;
         }
     }
 }

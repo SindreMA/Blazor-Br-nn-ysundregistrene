@@ -12,6 +12,9 @@ namespace BrregAPI.Modals.Database
         public string? Poststed { get; set; }
         public string? Kommune { get; set; }
         public string? Kommunenummer { get; set; }
+        public string? GateAdresse { get; set; }
+        
+        
         
         public Adresse(AdresseRequest addrese)
         {
@@ -20,7 +23,9 @@ namespace BrregAPI.Modals.Database
             Postnummer = addrese.postnummer;
             Poststed = addrese.poststed;
             Kommune = addrese.kommune;
-            Kommunenummer = addrese.kommunenummer;            
+            Kommunenummer = addrese.kommunenummer;
+            if (addrese.adresse.Any()) GateAdresse = addrese.adresse.FirstOrDefault();
+
         }
         
         public Adresse()

@@ -53,9 +53,8 @@
 
     private async Task RegisterCall()
     {
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "https://brreg.sindrema.com/api";
         var content = new { username, password = password1 };
-        var user = await Http.PostAsJsonAsync($"{apiUrl}/auth/create", content);
+        var user = await Http.PostAsJsonAsync($"{Statics.apiUrl}/auth/create", content);
         _userData.user = await user.Content.ReadFromJsonAsync<UserObject>();
         _userData.ValuesChanged.Invoke();
     }

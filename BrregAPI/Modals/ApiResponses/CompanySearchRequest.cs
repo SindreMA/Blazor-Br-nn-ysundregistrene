@@ -64,6 +64,7 @@ namespace BrregAPI.Modals.ApiResponse
         public Link self { get; set; }
         public Link next { get; set; }
         public Link last { get; set; }
+        public Link enhet { get; set; }
     }
 
     public class Link

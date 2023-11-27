@@ -56,12 +56,10 @@
 
     private async Task FetchData()
     {
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "https://brreg.sindrema.com/api";
-
         loading = true;
         try
         {
-            data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"{apiUrl}/Company?start={start}&amount={amount}");
+            data = await httpClient.GetFromJsonAsync<ListResponse<CompanyBaseObject>>($"{Statics.apiUrl}/Company?start={start}&amount={amount}");
         }
         catch (Exception)
         {

@@ -11,6 +11,7 @@
         <br />
         <CompanyDetails value="@_company" />
         <br />
+        <br />
         <PersonList list="@_company.Personer" />
     </div>
 }
@@ -42,8 +43,7 @@ else
 
     private async Task FetchCompany()
     {
-        var apiUrl = Environment.GetEnvironmentVariable("API_URL") ?? "https://brreg.sindrema.com/api";
-        _company = await Http.GetFromJsonAsync<CompanyFullObject>($"{apiUrl}/Company/{OrgNr}");
+        _company = await Http.GetFromJsonAsync<CompanyFullObject>($"{Statics.apiUrl}/Company/{OrgNr}");
     }
 
 

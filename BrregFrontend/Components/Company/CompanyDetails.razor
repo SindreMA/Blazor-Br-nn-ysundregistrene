@@ -16,7 +16,11 @@
             <ValueDisplay Width="180" Label="Institutional sector code" Value="@value.InstitusjonellSektorkode" />
             <ValueDisplay Width="180" Label="Bankruptcy" Value="@value.Konkurs" />
             <ValueDisplay Width="180" Label="Language" Value="@value.Maalform" />
-            <ValueDisplay Width="180" Label="Website" Value="@value.Hjemmeside" />
+
+            @if (!string.IsNullOrWhiteSpace(value.Hjemmeside)) {
+                <ValueDisplay Width="180" Label="Website" Value="@value.Hjemmeside" />
+            }
+
         </div>
     </div>
     <br />
@@ -36,6 +40,6 @@
 
 
     private string GetAddressString( AdresseObject address) => 
-        $"{address?.Kommune ?? "unknown"}, {address?.Postnummer ?? "unknown"} {address?.Poststed ?? "unknown"} {address?.Land ?? "unknown"}";
+        $"{address?.Gateadresse ?? "unknown"}, {address?.Postnummer ?? "unknown"} {address?.Poststed ?? "unknown"} {address?.Land ?? "unknown"}";
 
 }

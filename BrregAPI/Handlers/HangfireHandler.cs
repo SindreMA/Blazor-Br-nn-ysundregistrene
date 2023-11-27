@@ -23,6 +23,7 @@ namespace BrregAPI.Handlers
         public static void SetupTasks()
         {
             RecurringJob.AddOrUpdate<FetcherService>("FetchCompaniesAll", x=> x.FetchCompanies(5000, 0, null), Cron.Never());
+            RecurringJob.AddOrUpdate<FetcherService>("FetchEmployeesAll", x=> x.FetchEmployeesForAllCompanies(), Cron.Never());
         }        
     }    
 }

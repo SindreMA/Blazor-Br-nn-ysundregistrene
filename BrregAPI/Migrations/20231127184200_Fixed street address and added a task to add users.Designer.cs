@@ -3,6 +3,7 @@ using System;
 using BrregAPI.Modals;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace BrregAPI.Migrations
 {
     [DbContext(typeof(BrregContext))]
-    partial class BrregContextModelSnapshot : ModelSnapshot
+    [Migration("20231127184200_Fixed street address and added a task to add users")]
+    partial class Fixedstreetaddressandaddedatasktoaddusers
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -138,6 +141,7 @@ namespace BrregAPI.Migrations
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Epost")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<long?>("FirmaOrganisasjonsnummer")
@@ -156,6 +160,7 @@ namespace BrregAPI.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Telefon")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
