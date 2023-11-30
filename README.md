@@ -20,7 +20,7 @@ A simple web interface for "maintenance of businesses" needs to be developed. A 
 - The interface should be usable in a web browser.
 - The solution should be developed using ASP.NET and C#.
 - Data should be stored in a relational database such as PostgreSQL or Microsoft SQL Server.
-- "External data" should be presented, which can be retrieved from the Brønnøysund registers using the organization number of the business as a parameter ([Brønnøysund API](https://data.brreg.no/enhetsregisteret/api/enheter/951206091)).
+- "External data" should be presented, which can be retrieved from the Brønnøysund registers using the organization number of the business as a parameter ([Brønnøysund API](https://data.brreg.no/enhetsregisteret/api/enheter/917887721)).
 - It is an advantage if the solution is protected with some form of authentication.
 
 ## Tools
