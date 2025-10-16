@@ -18,10 +18,23 @@ RUN dotnet publish "BrregFrontend.csproj" -c Release -o /app/publish /p:UseAppHo
 FROM nginx:alpine AS final
 WORKDIR /usr/share/nginx/html
 
+# Install gettext for envsubst command
+RUN apk add --no-cache gettext
+
 # Copy the published Blazor WASM files
 COPY --from=publish /app/publish/wwwroot .
 
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
+# Copy entrypoint script for environment variable injection
+COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
+# Set default API_URL
+ENV API_URL=https://brreg.sindrema.com/api
+
 EXPOSE 80
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["nginx", "-g", "daemon off;"]

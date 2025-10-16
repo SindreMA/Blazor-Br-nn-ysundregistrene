@@ -2,7 +2,8 @@
 {
     public class Statics
     {
-        public static string apiUrl = "https://brreg.sindrema.com/api"; // prod server
-        //public static string apiUrl = "http://localhost:5050/api"; // dev server
+        // Read API URL from environment variable, fallback to production URL
+        public static string apiUrl = Environment.GetEnvironmentVariable("API_URL")
+            ?? "https://brreg.sindrema.com/api";
     }
 }
