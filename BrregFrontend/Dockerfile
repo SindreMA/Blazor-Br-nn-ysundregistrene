@@ -27,8 +27,9 @@ COPY --from=publish /app/publish/wwwroot .
 # Copy nginx configuration
 COPY nginx.conf /etc/nginx/nginx.conf
 
-# Copy entrypoint script for environment variable injection
+# Copy entrypoint script for environment variable injection and fix line endings
 COPY docker-entrypoint.sh /docker-entrypoint.sh
+RUN dos2unix /docker-entrypoint.sh || sed -i 's/\r$//' /docker-entrypoint.sh
 RUN chmod +x /docker-entrypoint.sh
 
 # Set default API_URL
