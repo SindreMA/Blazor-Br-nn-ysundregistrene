@@ -5,6 +5,7 @@ using BrregAPI.Modals;
 using BrregAPI.Modals.Database;
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -13,6 +14,15 @@ AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 AppContext.SetSwitch("Npgsql.DisableDateTimeInfinityConversions", true);
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Configure forwarded headers for proxy/gateway support
+builder.Services.Configure<ForwardedHeadersOptions>(options =>
+{
+    options.ForwardedHeaders = Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedFor
+        | Microsoft.AspNetCore.HttpOverrides.ForwardedHeaders.XForwardedProto;
+    options.KnownNetworks.Clear();
+    options.KnownProxies.Clear();
+});
 
 builder.Services
     .AddControllers()
@@ -44,8 +54,11 @@ builder.Services
         CookieAuthenticationDefaults.AuthenticationScheme,
         o =>
         {
-            o.Cookie.SameSite = SameSiteMode.None; // for test only, so we can publish api, but use client locally
-            o.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            o.Cookie.Name = "BrregAuth";
+            o.Cookie.SameSite = SameSiteMode.Lax; // Lax works for same-site (frontend and backend on same domain)
+            o.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Use secure when request is HTTPS
+            o.Cookie.HttpOnly = true;
+            o.Cookie.IsEssential = true;
             o.ExpireTimeSpan = TimeSpan.FromDays(7);
             o.SlidingExpiration = true;
         }
@@ -67,7 +80,11 @@ builder.Services.Configure<IdentityOptions>(o =>
 
 builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.Name = "BrregAuth";
+    options.Cookie.SameSite = SameSiteMode.Lax; // Match the authentication cookie settings
+    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest; // Match the authentication cookie settings
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
     options.Events.OnRedirectToLogin = context =>
     {
         context.Response.StatusCode = 401;
@@ -87,6 +104,19 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+// Use forwarded headers from gateway/proxy (must be first)
+app.UseForwardedHeaders();
+
+// Cookie policy must be set before CORS and Authentication
+app.UseCookiePolicy(
+    new CookiePolicyOptions()
+    {
+        MinimumSameSitePolicy = SameSiteMode.Lax,
+        Secure = CookieSecurePolicy.SameAsRequest
+    }
+);
+
+// CORS configuration
 app.UseCors(
     b =>
         b.SetIsOriginAllowed(
@@ -99,24 +129,13 @@ app.UseCors(
             .AllowAnyHeader()
 );
 
-app.UseHttpsRedirection();
+// Do NOT use HTTPS redirection - gateway handles HTTPS
+// app.UseHttpsRedirection();
 
 app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-
-if (app.Environment.IsDevelopment())
-{
-    //For development only, lets us publish api, but use client locally
-    app.UseCookiePolicy(
-        new CookiePolicyOptions()
-        {
-            MinimumSameSitePolicy = SameSiteMode.None,
-            Secure = CookieSecurePolicy.Always
-        }
-    );
-}
 
 app.UseHangfireDashboard(
     "/hangfire",

@@ -7,7 +7,8 @@
       "Bash(docker exec:*)",
       "Bash(docker stop:*)",
       "Bash(docker rm:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(dotnet build:*)"
     ],
     "deny": [],
     "ask": []
