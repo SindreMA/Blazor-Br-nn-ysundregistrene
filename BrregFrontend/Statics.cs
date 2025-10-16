@@ -2,8 +2,7 @@
 {
     public class Statics
     {
-        // Read API URL from environment variable, fallback to production URL
-        public static string apiUrl = Environment.GetEnvironmentVariable("API_URL")
-            ?? "https://brreg.sindrema.com/api";
+        // API URL loaded from config.json at startup
+        public static string apiUrl = "https://brreg.sindrema.com/api";
     }
 }

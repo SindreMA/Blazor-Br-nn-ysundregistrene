@@ -18,9 +18,6 @@ RUN dotnet publish "BrregFrontend.csproj" -c Release -o /app/publish /p:UseAppHo
 FROM nginx:alpine AS final
 WORKDIR /usr/share/nginx/html
 
-# Install gettext for envsubst command
-RUN apk add --no-cache gettext
-
 # Copy the published Blazor WASM files
 COPY --from=publish /app/publish/wwwroot .
 
